@@ -1,112 +1,107 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { pgTable, text, integer, timestamp, serial, boolean } from "drizzle-orm/pg-core";
 
 // BetterAuth User Table
-export const user = sqliteTable("user", {
-  // IMPORTANT: id must be text, not integer
+export const user = pgTable("user", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
-  emailVerified: integer("emailVerified", { mode: "boolean" }).notNull().default(false),
+  emailVerified: boolean("emailVerified").notNull().default(false),
   name: text("name"),
   image: text("image"),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
 // BetterAuth Session Table
-export const session = sqliteTable("session", {
+export const session = pgTable("session", {
   id: text("id").primaryKey(),
-  // IMPORTANT: userId must be text to match user.id type
   userId: text("userId")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  expiresAt: integer("expiresAt", { mode: "timestamp" }).notNull(),
+  expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
   token: text("token").notNull().unique(),
   ipAddress: text("ipAddress"),
   userAgent: text("userAgent"),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
 // BetterAuth Account Table
-export const account = sqliteTable("account", {
-  // IMPORTANT: id must be text, not integer
+export const account = pgTable("account", {
   id: text("id").primaryKey(),
-  // IMPORTANT: userId must be text to match user.id type
   userId: text("userId")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   accountId: text("accountId").notNull(),
   providerId: text("providerId").notNull(),
   password: text("password"),
-  // IMPORTANT: these fields must be nullable
   type: text("type"),
   provider: text("provider"),
   providerAccountId: text("providerAccountId"),
   refresh_token: text("refresh_token"),
   access_token: text("access_token"),
-  expires_at: integer("expires_at", { mode: "timestamp" }),
+  expires_at: timestamp("expires_at", { mode: "date" }),
   token_type: text("token_type"),
   scope: text("scope"),
   id_token: text("id_token"),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
 // BetterAuth Verification Table
-export const verification = sqliteTable("verification", {
-  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+export const verification = pgTable("verification", {
+  id: serial("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-  expiresAt: integer("expiresAt", { mode: "timestamp" }).notNull(),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
 // Project-specific tables for Segre.vip
 
-export const page = sqliteTable("page", {
+export const page = pgTable("page", {
   id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  username: text("username").notNull().unique(), // For username.segre.vip URLs
-  slug: text("slug").notNull(), // URL slug
-  type: text("type").notNull(), // 'bio' or 'offer'
+  username: text("username").notNull().unique(),
+  slug: text("slug").notNull(),
+  type: text("type").notNull(),
   title: text("title").notNull(),
   description: text("description"),
-  theme: text("theme").notNull().default("luxury"), // 'luxury' or 'neon'
-  isPublished: integer("isPublished", { mode: "boolean" }).notNull().default(false),
+  theme: text("theme").notNull().default("luxury"),
+  isPublished: boolean("isPublished").notNull().default(false),
   coverImage: text("coverImage"),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const block = sqliteTable("block", {
+export const block = pgTable("block", {
   id: text("id").primaryKey(),
   pageId: text("pageId")
     .notNull()
     .references(() => page.id, { onDelete: "cascade" }),
-  type: text("type").notNull(), // 'header', 'link', 'cta', 'social', 'embed', 'text'
-  content: text("content").notNull(), // JSON string for flexible content
-  style: text("style").notNull(), // JSON string for custom styles
+  type: text("type").notNull(),
+  content: text("content").notNull(),
+  style: text("style").notNull(),
   order: integer("order").notNull(),
-  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
+  visible: boolean("visible").notNull().default(true),
   trackingLabel: text("trackingLabel"),
   targetUrl: text("targetUrl"),
-  openInNewTab: integer("openInNewTab", { mode: "boolean" }).notNull().default(true),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  openInNewTab: boolean("openInNewTab").notNull().default(true),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const event = sqliteTable("event", {
+export const event = pgTable("event", {
   id: text("id").primaryKey(),
   pageId: text("pageId")
     .notNull()
     .references(() => page.id, { onDelete: "cascade" }),
   blockId: text("blockId").references(() => block.id, { onDelete: "set null" }),
-  eventType: text("eventType").notNull(), // 'view', 'click', 'submit'
+  eventType: text("eventType").notNull(),
   referrer: text("referrer"),
-  utm: text("utm"), // JSON string
-  device: text("device"), // JSON string
+  utm: text("utm"),
+  device: text("device"),
   userAgent: text("userAgent"),
-  timestamp: integer("timestamp", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  timestamp: timestamp("timestamp", { mode: "date" }).notNull().defaultNow(),
 });

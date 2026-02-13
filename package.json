@@ -52,8 +52,6 @@
 		"vite-plugin-devtools-json": "^1.0.0"
 	},
 	"dependencies": {
-		"@types/better-sqlite3": "^7.6.13",
-		"better-sqlite3": "^12.6.2",
 		"lucide-svelte": "^0.563.0",
 		"svelte-dnd-action": "^0.9.69",
 		"sveltekit-superforms": "^2.29.1",

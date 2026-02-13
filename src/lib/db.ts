@@ -1,20 +1,18 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { env } from "$env/dynamic/private";
-import path from "path";
-import { fileURLToPath } from "url";
 import * as schema from "./db/schema";
 
-// Get project root directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const dbPath = path.join(process.cwd(), "sqlite.db");
+const connectionString = env.DATABASE_URL;
 
-// Create SQLite database connection
-const sqlite = new Database(dbPath);
-sqlite.pragma("journal_mode = WAL"); // Better performance
+// Create PostgreSQL client with connection pooling
+const client = postgres(connectionString, {
+  max: 10,
+  idle_timeout: 20,
+  connect_timeout: 10,
+});
 
 // Create Drizzle client with schema typing
-export const db = drizzle(sqlite, { schema });
+export const db = drizzle(client, { schema });
 
 export default db;
