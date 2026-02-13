@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segre.vip - Connect with Your Favorite Creators</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ========== CSS VARIABLES ========== */
+        :root {
+            /* Primary Colors - Deep Purple */
+            --purple-primary: #2D1B4E;
+            --purple-dark: #1A0A2E;
+            --purple-light: #3D2B5E;
+            --purple-glow: rgba(45, 27, 78, 0.5);
+
+            /* Gold Accents - Antique Gold (Muted, Sophisticated) */
+            --gold-primary: #C5A059;
+            --gold-light: #D4C4A8;
+            --gold-dark: #9A7B3D;
+            --gold-glow: rgba(197, 160, 89, 0.3);
+
+            /* Additional Colors */
+            --text-primary: #D4C4A8;
+            --text-secondary: rgba(212, 196, 168, 0.7);
+            --text-muted: rgba(212, 196, 168, 0.5);
+
+            /* Glassmorphism */
+            --glass-bg: rgba(45, 27, 78, 0.4);
+            --glass-border: rgba(197, 160, 89, 0.2);
+            --glass-blur: 20px;
+
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #1A0A2E 0%, #2D1B4E 50%, #3D2B5E 100%);
+            --gradient-gold: linear-gradient(135deg, #C5A059 0%, #D4C4A8 50%, #9A7B3D 100%);
+            --gradient-glow: radial-gradient(ellipse at center, rgba(197, 160, 89, 0.12) 0%, transparent 70%);
+
+            /* Subscription Tiers */
+            --tier-free: #6B7280;
+            --tier-basic: #3B82F6;
+            --tier-premium: #8B5CF6;
+            --tier-vip: #C5A059;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --spacing-2xl: 4rem;
+
+            /* Transitions */
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.2s var(--transition-smooth);
+            --transition-normal: 0.3s var(--transition-smooth);
+            --transition-slow: 0.5s var(--transition-smooth);
+        }
+
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--purple-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            z-index: -2;
+        }
+
+        /* Glow Effects */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-glow);
+            animation: glowPulse 15s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            25% { transform: translate(10%, 10%) scale(1.1); opacity: 0.7; }
+            50% { transform: translate(-5%, 15%) scale(1); opacity: 0.5; }
+            75% { transform: translate(-10%, -5%) scale(1.05); opacity: 0.6; }
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--gold-light);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        button {
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        /* ========== UTILITY CLASSES ========== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .section {
+            padding: var(--spacing-2xl) 0;
+            position: relative;
+        }
+
+        .text-center { text-align: center; }
+        .text-gold { color: var(--gold-light); }
+
+        /* ========== GLASS CARD ========== */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-normal);
+        }
+
+        .glass-card:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 12px 48px rgba(197, 160, 89, 0.2);
+            transform: translateY(-4px);
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 50px;
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: var(--purple-dark);
+            border: 2px solid transparent;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(197, 160, 89, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold-light);
+            border: 2px solid var(--gold-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(197, 160, 89, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ========== NAVIGATION ========== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: var(--spacing-md) 0;
+            transition: var(--transition-normal);
+        }
+
+        .nav.scrolled {
+            background: rgba(26, 10, 46, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--gold-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .nav-link {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-primary);
+            transition: var(--transition-normal);
+        }
+
+        .nav-link:hover {
+            color: var(--gold-light);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            background: none;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: calc(var(--spacing-2xl) + 80px) 0 var(--spacing-2xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: rgba(197, 160, 89, 0.15);
+            border: 1px solid var(--gold-primary);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 1s var(--transition-smooth) forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeInUp 1s var(--transition-smooth) 0.2s forwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s var(--transition-smooth) 0.4s forwards;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+            opacity: 0;
+            animation: fadeInUp 1s var(--transition-smooth) 0.6s forwards;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Floating Elements */
+        .hero-float {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.2) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .hero-float-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .hero-float-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .hero-float-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -30px) rotate(90deg); }
+            50% { transform: translate(-20px, 20px) rotate(180deg); }
+            75% { transform: translate(20px, 10px) rotate(270deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== SECTION HEADER ========== */
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .section-subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ========== CREATORS GRID ========== */
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .creator-card {
+            padding: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSection 0.6s var(--transition-smooth) forwards;
+        }
+
+        .creator-card:nth-child(1) { animation-delay: 0.1s; }
+        .creator-card:nth-child(2) { animation-delay: 0.2s; }
+        .creator-card:nth-child(3) { animation-delay: 0.3s; }
+        .creator-card:nth-child(4) { animation-delay: 0.4s; }
+        .creator-card:nth-child(5) { animation-delay: 0.5s; }
+        .creator-card:nth-child(6) { animation-delay: 0.6s; }
+        .creator-card:nth-child(7) { animation-delay: 0.7s; }
+        .creator-card:nth-child(8) { animation-delay: 0.8s; }
+
+        @keyframes fadeInSection {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .creator-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .creator-avatar {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .creator-avatar img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold-primary);
+        }
+
+        .creator-online {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 14px;
+            height: 14px;
+            background: #22C55E;
+            border: 2px solid var(--purple-dark);
+            border-radius: 50%;
+        }
+
+        .creator-online.offline {
+            background: #6B7280;
+        }
+
+        .creator-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .creator-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .creator-name i {
+            color: #3B82F6;
+            font-size: 0.9rem;
+        }
+
+        .creator-username {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .creator-bio {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .creator-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .creator-tag {
+            padding: 0.25rem 0.6rem;
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--gold-light);
+        }
+
+        .creator-tier {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .tier-Free { background: var(--tier-free); }
+        .tier-Basic { background: var(--tier-basic); }
+        .tier-Premium { background: var(--tier-premium); }
+        .tier-VIP {
+            background: var(--tier-vip);
+            color: #1A0A2E;
+        }
+
+        .creator-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .creator-stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .creator-stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        .creator-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .creator-socials {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .creator-social {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+        }
+
+        .creator-social:hover {
+            background: var(--gold-primary);
+            color: var(--purple-dark);
+            transform: translateY(-2px);
+        }
+
+        /* ========== CATEGORIES ========== */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .category-card {
+            padding: var(--spacing-lg);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-md);
+            border-radius: 50%;
+            background: rgba(197, 160, 89, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            transition: var(--transition-normal);
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--gold-primary);
+            transform: scale(1.1);
+            color: var(--purple-dark);
+        }
+
+        .category-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .category-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ========== HOW IT WORKS ========== */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+            position: relative;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-md);
+            border-radius: 50%;
+            background: var(--gradient-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--purple-dark);
+            box-shadow: 0 4px 20px rgba(197, 160, 89, 0.4);
+        }
+
+        .step-title {
+            font-size: 1.35rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+        }
+
+        /* ========== PRICING ========== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            padding: var(--spacing-xl);
+            text-align: center;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--gold-primary);
+            transform: scale(1.05);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.4rem 1rem;
+            background: var(--gradient-gold);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--purple-dark);
+        }
+
+        .pricing-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .pricing-price.free {
+            font-size: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: var(--spacing-lg) 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: var(--spacing-xs) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--text-secondary);
+        }
+
+        .pricing-features li i {
+            color: var(--gold-primary);
+        }
+
+        .pricing-card .btn {
+            width: 100%;
+        }
+
+        /* ========== SOCIAL PROOF ========== */
+        .stats-section {
+            background: rgba(197, 160, 89, 0.05);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: rgba(26, 10, 46, 0.9);
+            border-top: 1px solid var(--glass-border);
+            padding: var(--spacing-2xl) 0 var(--spacing-lg);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(2, 1fr) 1fr;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .footer-brand .logo {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-light);
+            padding-left: 5px;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .footer-social {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            font-size: 1rem;
+            transition: var(--transition-fast);
+        }
+
+        .footer-social:hover {
+            background: var(--gold-primary);
+            color: var(--purple-dark);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ========== SCROLL ANIMATIONS ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--transition-smooth);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== RESPONSIVE DESIGN ========== */
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: calc(var(--spacing-xl) + 60px) 0 var(--spacing-xl);
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: var(--spacing-md);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+            }
+
+            .creators-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-brand p,
+            .footer-title {
+                text-align: center;
+            }
+
+            .footer-socials {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 var(--spacing-md);
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .creators-grid,
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* ========== ACCESSIBILITY ========== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--gold-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">segre<span>.vip</span></a>
+                <div class="nav-links">
+                    <a href="#creators" class="nav-link">Creators</a>
+                    <a href="#categories" class="nav-link">Categories</a>
+                    <a href="#how-it-works" class="nav-link">How It Works</a>
+                    <a href="#pricing" class="nav-link">Pricing</a>
+                    <a href="#" class="btn btn-secondary">Log In</a>
+                    <a href="#" class="btn btn-primary">Sign Up Free</a>
+                </div>
+                <button class="mobile-menu-btn" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-float hero-float-1"></div>
+        <div class="hero-float hero-float-2"></div>
+        <div class="hero-float hero-float-3"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Exclusive Creator Platform</span>
+                </div>
+                <h1 class="hero-title">Connect with Your Favorite Creators</h1>
+                <p class="hero-subtitle">Discover exclusive content from the world's most captivating creators. All your favorite links in one elegant place.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary">
+                        <span>Start Exploring</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <i class="fas fa-rocket"></i>
+                        <span>Join as Creator</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">15,000+</div>
+                        <div class="hero-stat-label">Creators</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">2.5M+</div>
+                        <div class="hero-stat-label">Followers</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">50M+</div>
+                        <div class="hero-stat-label">Profile Views</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Creators -->
+    <section class="section" id="creators">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-subtitle">Featured Creators</p>
+                <h2 class="section-title">Discover Our Elite</h2>
+                <p class="section-description">Hand-picked creators from around the world, ready to connect with you.</p>
+            </div>
+
+            <div class="creators-grid">
+                <!-- Creator 1: Violet Rose -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Violet+Rose&background=8B5CF6&color=fff&size=400" alt="Violet Rose">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Violet Rose <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@violet_rose</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">✨ Cosplay & alternative model | New content daily 🦋</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Cosplay</span>
+                        <span class="creator-tier tier-Premium"><i class="fas fa-crown"></i> Premium</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">245K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">8.9K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="OnlyFans"><i class="fas fa-heart"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="creator-social" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="creator-social" title="Discord"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 2: Megan Fit -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Megan+Fit&background=EC4899&color=fff&size=400" alt="Megan Fit">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Megan Fit <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@fit_megan</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">💪 Fitness & lifestyle | Personal trainer by day, creator by night</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Fitness</span>
+                        <span class="creator-tier tier-VIP"><i class="fas fa-gem"></i> VIP</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">512K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">15.6K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="Fansly"><i class="fas fa-fire"></i></a>
+                        <a href="#" class="creator-social" title="Patreon"><i class="fab fa-patreon"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 3: Emma Lux -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Emma+Lux&background=F59E0B&color=fff&size=400" alt="Emma Lux">
+                            <div class="creator-online offline"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Emma Lux <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@lingerie_emma</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">👙 Lingerie & fashion | Daily uploads | Exclusive behind-the-scenes</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Lingerie</span>
+                        <span class="creator-tier tier-Premium"><i class="fas fa-crown"></i> Premium</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">178K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">6.2K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="OnlyFans"><i class="fas fa-heart"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="creator-social" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 4: Sky Gaming -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Sky+Gaming&background=3B82F6&color=fff&size=400" alt="Sky Gaming">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Sky Gaming <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@gamer_sky</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">🎮 Pro gamer & streamer | Gaming sessions + exclusive content</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Gamer</span>
+                        <span class="creator-tier tier-Basic"><i class="fas fa-star"></i> Basic</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">389K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">4.1K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="Twitch"><i class="fab fa-twitch"></i></a>
+                        <a href="#" class="creator-social" title="Fansly"><i class="fas fa-fire"></i></a>
+                        <a href="#" class="creator-social" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="creator-social" title="Discord"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 5: Bella Fox -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Bella+Fox&background=F97316&color=fff&size=400" alt="Bella Fox">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Bella Fox <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@bella_fox</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">🦊 Alternative model & performer | Daily uploads | Custom content requests</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Alternative</span>
+                        <span class="creator-tier tier-VIP"><i class="fas fa-gem"></i> VIP</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">678K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">23.4K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="Fansly"><i class="fas fa-fire"></i></a>
+                        <a href="#" class="creator-social" title="OnlyFans"><i class="fas fa-heart"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 6: Nova Music -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Nova+Music&background=A855F7&color=fff&size=400" alt="Nova Music">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Nova Music <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@music_nova</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">🎵 Singer & content creator | Behind the scenes + exclusive music</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Music</span>
+                        <span class="creator-tier tier-Basic"><i class="fas fa-star"></i> Basic</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">567K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">12.4K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="OnlyFans"><i class="fas fa-heart"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="creator-social" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 7: Ava Glam -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Ava+Glam&background=DB2777&color=fff&size=400" alt="Ava Glam">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Ava Glam <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@glam_ava</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">✨ Beauty & makeup guru | Tutorials + exclusive looks | Makeup artist</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Beauty</span>
+                        <span class="creator-tier tier-VIP"><i class="fas fa-gem"></i> VIP</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">789K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">18.7K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="creator-social" title="OnlyFans"><i class="fas fa-heart"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <!-- Creator 8: Chloe Dance -->
+                <div class="creator-card glass-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Chloe+Dance&background=EC4899&color=fff&size=400" alt="Chloe Dance">
+                            <div class="creator-online"></div>
+                        </div>
+                        <div class="creator-info">
+                            <div class="creator-name">Chloe Dance <i class="fas fa-check-circle"></i></div>
+                            <div class="creator-username">@dance_chloe</div>
+                        </div>
+                    </div>
+                    <p class="creator-bio">💃 Professional dancer & choreographer | Dance tutorials + exclusive</p>
+                    <div class="creator-tags">
+                        <span class="creator-tag">Dance</span>
+                        <span class="creator-tier tier-Premium"><i class="fas fa-crown"></i> Premium</span>
+                    </div>
+                    <div class="creator-stats">
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">423K</div>
+                            <div class="creator-stat-label">Followers</div>
+                        </div>
+                        <div class="creator-stat">
+                            <div class="creator-stat-value">9.8K</div>
+                            <div class="creator-stat-label">Subscribers</div>
+                        </div>
+                    </div>
+                    <div class="creator-socials">
+                        <a href="#" class="creator-social" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="creator-social" title="OnlyFans"><i class="fas fa-heart"></i></a>
+                        <a href="#" class="creator-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="creator-social" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top: var(--spacing-xl);">
+                <a href="#" class="btn btn-secondary">
+                    <span>View All Creators</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section" id="categories">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-subtitle">Browse Categories</p>
+                <h2 class="section-title">Find What You Love</h2>
+                <p class="section-description">Explore creators across a wide range of categories and niches.</p>
+            </div>
+
+            <div class="categories-grid">
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-mask"></i></div>
+                    <div class="category-name">Cosplay</div>
+                    <div class="category-count">245 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-dumbbell"></i></div>
+                    <div class="category-name">Fitness</div>
+                    <div class="category-count">389 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-shirt"></i></div>
+                    <div class="category-name">Lingerie</div>
+                    <div class="category-count">178 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-gamepad"></i></div>
+                    <div class="category-name">Gamer</div>
+                    <div class="category-count">412 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-palette"></i></div>
+                    <div class="category-name">Artist</div>
+                    <div class="category-count">156 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-sparkles"></i></div>
+                    <div class="category-name">Alternative</div>
+                    <div class="category-count">267 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-heart"></i></div>
+                    <div class="category-name">Wellness</div>
+                    <div class="category-count">134 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-music"></i></div>
+                    <div class="category-name">Music</div>
+                    <div class="category-count">298 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-camera"></i></div>
+                    <div class="category-name">Photography</div>
+                    <div class="category-count">89 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-dancer"></i></div>
+                    <div class="category-name">Dance</div>
+                    <div class="category-count">312 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="category-name">Food</div>
+                    <div class="category-count">67 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-pen-fancy"></i></div>
+                    <div class="category-name">Tattoo</div>
+                    <div class="category-count">145 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-sun"></i></div>
+                    <div class="category-name">Lifestyle</div>
+                    <div class="category-count">523 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-star"></i></div>
+                    <div class="category-name">Beauty</div>
+                    <div class="category-count">456 Creators</div>
+                </div>
+                <div class="category-card glass-card reveal">
+                    <div class="category-icon"><i class="fas fa-microphone"></i></div>
+                    <div class="category-name">Podcasting</div>
+                    <div class="category-count">98 Creators</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-subtitle">How It Works</p>
+                <h2 class="section-title">Get Started in Minutes</h2>
+                <p class="section-description">Join thousands of creators who've already made the switch.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card glass-card reveal">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Create Your Profile</h3>
+                    <p class="step-description">Sign up and build your stunning profile in minutes. Add your bio, avatar, and personalize your page.</p>
+                </div>
+                <div class="step-card glass-card reveal">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Add Your Links</h3>
+                    <p class="step-description">Connect all your social media platforms—OnlyFans, Fansly, Instagram, Twitter, and more—in one place.</p>
+                </div>
+                <div class="step-card glass-card reveal">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Share & Grow</h3>
+                    <p class="step-description">Share your segre.vip link everywhere and watch your audience grow with our powerful analytics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-subtitle">Pricing Plans</p>
+                <h2 class="section-title">Choose Your Plan</h2>
+                <p class="section-description">Start free and upgrade as you grow. No hidden fees.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card glass-card reveal">
+                    <h3 class="pricing-name">Free</h3>
+                    <div class="pricing-price free">Free</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Basic profile</li>
+                        <li><i class="fas fa-check"></i> Up to 3 social links</li>
+                        <li><i class="fas fa-check"></i> Public visibility</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Get Started</a>
+                </div>
+
+                <div class="pricing-card glass-card featured reveal">
+                    <div class="pricing-badge">Most Popular</div>
+                    <h3 class="pricing-name">Basic</h3>
+                    <div class="pricing-price">$9.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Everything in Free</li>
+                        <li><i class="fas fa-check"></i> Up to 6 social links</li>
+                        <li><i class="fas fa-check"></i> Custom profile URL</li>
+                        <li><i class="fas fa-check"></i> Analytics dashboard</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Get Started</a>
+                </div>
+
+                <div class="pricing-card glass-card reveal">
+                    <h3 class="pricing-name">Premium</h3>
+                    <div class="pricing-price">$19.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Everything in Basic</li>
+                        <li><i class="fas fa-check"></i> Unlimited social links</li>
+                        <li><i class="fas fa-check"></i> Verified badge</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Featured in search</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Get Started</a>
+                </div>
+
+                <div class="pricing-card glass-card reveal">
+                    <h3 class="pricing-name">VIP</h3>
+                    <div class="pricing-price">$29.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Everything in Premium</li>
+                        <li><i class="fas fa-check"></i> Custom branding</li>
+                        <li><i class="fas fa-check"></i> API access</li>
+                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                        <li><i class="fas fa-check"></i> Featured on homepage</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof / Stats -->
+    <section class="section stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <div class="stat-value">15,000+</div>
+                    <div class="stat-label">Active Creators</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-value">2.5M</div>
+                    <div class="stat-label">Total Followers</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-value">50M+</div>
+                    <div class="stat-label">Profile Views</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-value">45+</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">segre<span>.vip</span></a>
+                    <p>The premium link-in-bio platform built exclusively for adult content creators. Connect, grow, and monetize your audience with elegance.</p>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Platform</h4>
+                    <ul class="footer-links">
+                        <li><a href="#creators">Browse Creators</a></li>
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Features</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Creator Guide</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">API Docs</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Connect</h4>
+                    <div class="footer-socials">
+                        <a href="#" class="footer-social" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="footer-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="footer-social" title="Discord"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="footer-social" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 segre.vip. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll reveal animation
+        const reveals = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Mobile menu toggle (basic functionality)
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isHidden = window.getComputedStyle(navLinks).display === 'none';
+            if (isHidden) {
+                navLinks.style.display = 'flex';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'rgba(26, 10, 46, 0.98)';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.padding = 'var(--spacing-lg)';
+                navLinks.style.gap = 'var(--spacing-md)';
+            } else {
+                navLinks.style.display = '';
+                navLinks.style.position = '';
+                navLinks.style.background = '';
+                navLinks.style.flexDirection = '';
+                navLinks.style.padding = '';
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

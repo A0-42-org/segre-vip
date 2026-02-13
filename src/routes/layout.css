@@ -1,0 +1,6 @@
+@import "@skeletonlabs/skeleton-svelte";
+
+/* Custom theme adjustments for Segre.vip */
+:root {
+--font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}

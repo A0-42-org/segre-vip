@@ -1,0 +1,9 @@
+{
+  "mcp_servers": {
+    "svelte": {
+      "command": "node",
+      "args": ["@modelcontextprotocol/server-svelte"],
+      "env": {}
+    }
+  }
+}
