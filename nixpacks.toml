@@ -3,7 +3,7 @@ cmds = ["bun install"]
 
 [phases.build]
 cmds = ["bun run build"]
-dependsOn = "install"
+dependsOn = ["install"]
 
 [start]
 cmd = "node dist/server/index.js"
