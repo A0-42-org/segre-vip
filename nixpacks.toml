@@ -3,6 +3,7 @@ cmds = ["bun install"]
 
 [phases.build]
 cmds = ["bun run build"]
+dependsOn = "install"
 
 [start]
 cmd = "node dist/server/index.js"
@@ -12,9 +13,6 @@ PORT = "3000"
 
 [build.env]
 NODE_VERSION = "20"
-
-[[phases.build.dependsOn]]
-phases = ["install"]
 
 [static]
 publishPath = "./dist"
