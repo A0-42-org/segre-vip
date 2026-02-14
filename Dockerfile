@@ -19,7 +19,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy built files
+# Copy built files (IMPORTANT: copy content of build directory)
 COPY --from=builder /app/build ./
 
 # Copy package.json for production dependencies
@@ -31,5 +31,5 @@ RUN npm install -g bun && bun install --production
 # Expose port 3000 (default for adapter-node)
 EXPOSE 3000
 
-# Start the application
+# Start the application (index.js is in the root after COPY)
 CMD ["node", "index.js"]
