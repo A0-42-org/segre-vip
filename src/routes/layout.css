@@ -4,9 +4,8 @@
 
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton-svelte';
-/* @import './lib/styles/index.css'; */
+@import '@skeletonlabs/skeleton/themes/cerberus';
 
-/* Custom theme adjustments for Segre.vip */
 :root {
 	--font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
