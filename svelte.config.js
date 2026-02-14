@@ -7,9 +7,7 @@ kit: {
 // Using adapter-node for Dokploy deployment
 adapter: adapter({
 // Edge server is not needed for Dokploy
-edge: false,
-// Output directory for Nixpacks build
-output: 'dist'
+edge: false
 })
 },
 preprocess: [mdsvex()],
