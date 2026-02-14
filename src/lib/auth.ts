@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./db";
 import * as schema from "./db/schema";
 import { env } from "$env/dynamic/private";
+import bcrypt from "bcryptjs";
 
 // Optional: Skip email verification with environment variable
 const skipEmailVerification = env.SKIP_EMAIL_VERIFICATION === "true";
@@ -22,6 +23,15 @@ export const auth = betterAuth({
     // Use environment variable to control email verification
     requireEmailVerification: !skipEmailVerification,
     autoSignInAfterSignUp: true,
+    // Configure bcryptjs for password hashing and verification
+    password: {
+      hash: async (password: string) => {
+        return await bcrypt.hash(password, 10);
+      },
+      verify: async ({ hash, password }: { hash: string; password: string }) => {
+        return await bcrypt.compare(password, hash);
+      },
+    },
     sendResetPassword: async ({ user, url }: { user: any; url: string }) => {
       console.log("📧 PASSWORD RESET EMAIL", user.email, url);
     },

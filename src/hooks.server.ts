@@ -32,15 +32,15 @@ const authGuard: Handle = async ({ event, resolve }) => {
 };
 
 export const handle: Handle = sequence(
-  authGuard,
+  // CRITICAL: svelteKitHandler MUST be first to handle /api/auth/* routes
   async ({ event, resolve }) => {
     event.locals.auth = auth;
-    const response = await svelteKitHandler({
+    return await svelteKitHandler({
       auth,
       event,
       resolve,
       building: false,
     });
-    return response;
-  }
+  },
+  authGuard
 );
