@@ -9,7 +9,7 @@ const skipEmailVerification = env.SKIP_EMAIL_VERIFICATION === "true";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "sqlite",
+    provider: "pg",
     schema: {
       user: schema.user,
       session: schema.session,

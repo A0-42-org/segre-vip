@@ -10,11 +10,25 @@ let { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
-<title>{data.page?.title || 'Profile'} | Segre.vip</title>
-<meta name="description" content="Creator profile on Segre.vip" />
-<meta property="og:type" content="profile" />
-<meta property="og:title" content={data.page?.title || 'Profile'} />
-<meta property="og:description" content="Creator profile on Segre.vip" />
+<!-- Dynamic SEO -->
+<title>{data.seo.title}</title>
+<meta name="description" content={data.seo.description} />
+<link rel="canonical" href={data.seo.url} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={data.seo.type} />
+<meta property="og:url" content={data.seo.url} />
+<meta property="og:title" content={data.seo.title} />
+<meta property="og:description" content={data.seo.description} />
+<meta property="og:image" content={data.seo.image} />
+<meta property="og:site_name" content={data.seo.siteName} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={data.seo.url} />
+<meta name="twitter:title" content={data.seo.title} />
+<meta name="twitter:description" content={data.seo.description} />
+<meta name="twitter:image" content={data.seo.image} />
 </svelte:head>
 
 {#if !data.page || !data.blocks}

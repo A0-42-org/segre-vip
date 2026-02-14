@@ -5,308 +5,343 @@ import { auth } from '$lib/auth';
 import { page, block } from '$lib/db/schema';
 import { z } from 'zod';
 
+// URL validation schema - only allow http:// and https://
+const safeUrlSchema = z.string().url().refine(
+  (url) => url.startsWith('http://') || url.startsWith('https://'),
+  { message: 'Only http:// and https:// URLs are allowed' }
+);
+
+// Block content validation based on block type
+const blockContentSchema = z.object({
+  targetUrl: safeUrlSchema.optional(),
+  url: safeUrlSchema.optional(),
+  links: z.array(z.object({
+    url: safeUrlSchema
+  })).optional(),
+  socials: z.array(z.object({
+    url: safeUrlSchema
+  })).optional()
+});
+
 function generateId() {
-return crypto.randomUUID();
+  return crypto.randomUUID();
 }
 
 export const load: ServerLoad = async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
+  const session = await auth.api.getSession({ headers: request.headers });
 
-if (!session) {
-throw redirect(302, '/login');
-}
+  if (!session) {
+    throw redirect(302, '/login');
+  }
 
-// Get first page for this user for MVP
-const userPage = await db.query.page.findFirst({
-where: eq(page.userId, session.user.id)
-});
+  // Get first page for this user for MVP
+  const userPage = await db.query.page.findFirst({
+    where: eq(page.userId, session.user.id)
+  });
 
-if (!userPage) {
-// Return a default page structure for MVP
-return {
-page: {
-id: '',
-title: 'My Bio Page',
-theme: 'luxury',
-isPublished: false,
-username: session.user.name || 'user'
-},
-blocks: []
-};
-}
+  if (!userPage) {
+    // Return a default page structure for MVP
+    return {
+      page: {
+        id: '',
+        title: 'My Bio Page',
+        theme: 'luxury',
+        isPublished: false,
+        username: session.user.name || 'user'
+      },
+      blocks: []
+    };
+  }
 
-// Get all blocks for this page, ordered
-const pageBlocks = await db.query.block.findMany({
-where: eq(block.pageId, userPage.id),
-orderBy: (blockTable: any, { asc }: any) => [asc(blockTable.order)]
-});
+  // Get all blocks for this page, ordered
+  const pageBlocks = await db.query.block.findMany({
+    where: eq(block.pageId, userPage.id),
+    orderBy: (blockTable: any, { asc }: any) => [asc(blockTable.order)]
+  });
 
-return {
-page: {
-id: userPage.id,
-title: userPage.title,
-theme: userPage.theme,
-isPublished: Boolean(userPage.isPublished),
-username: userPage.username
-},
-blocks: pageBlocks.map((b: any) => ({
-id: b.id,
-type: b.type,
-content: JSON.parse(b.content),
-style: JSON.parse(b.style || '{}'),
-order: b.order,
-visible: Boolean(b.visible)
-}))
-};
+  return {
+    page: {
+      id: userPage.id,
+      title: userPage.title,
+      theme: userPage.theme,
+      isPublished: Boolean(userPage.isPublished),
+      username: userPage.username
+    },
+    blocks: pageBlocks.map((b: any) => ({
+      id: b.id,
+      type: b.type,
+      content: JSON.parse(b.content),
+      style: JSON.parse(b.style || '{}'),
+      order: b.order,
+      visible: Boolean(b.visible)
+    }))
+  };
 };
 
 export const actions: Actions = {
-createBlock: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+  createBlock: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-const formData = await request.formData();
-const pageId = formData.get('pageId') as string;
-const type = formData.get('type') as string;
+    const formData = await request.formData();
+    const pageId = formData.get('pageId') as string;
+    const type = formData.get('type') as string;
 
-if (!pageId || !type) {
-return fail(400, { success: false, message: 'Missing required fields' });
-}
+    if (!pageId || !type) {
+      return fail(400, { success: false, message: 'Missing required fields' });
+    }
 
-// Verify ownership
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, pageId)
-});
+    // Verify ownership
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, pageId)
+    });
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-// Create new block
-const newBlock = await db.insert(block).values({
-id: generateId(),
-pageId,
-type,
-content: JSON.stringify({}),
-style: JSON.stringify({}),
-order: 0
-}).returning();
+    // Create new block
+    const newBlock = await db.insert(block).values({
+      id: generateId(),
+      pageId,
+      type,
+      content: JSON.stringify({}),
+      style: JSON.stringify({}),
+      order: 0
+    }).returning();
 
-return { success: true, blockId: newBlock[0].id };
-},
+    return { success: true, blockId: newBlock[0].id };
+  },
 
-updateBlock: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+  updateBlock: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-const formData = await request.formData();
-const blockId = formData.get('blockId') as string;
-const content = formData.get('content') as string;
+    const formData = await request.formData();
+    const blockId = formData.get('blockId') as string;
+    const content = formData.get('content') as string;
 
-if (!blockId || !content) {
-return fail(400, { success: false, message: 'Missing required fields' });
-}
+    if (!blockId || !content) {
+      return fail(400, { success: false, message: 'Missing required fields' });
+    }
 
-// Verify ownership
-const blockRecord = await db.query.block.findFirst({
-where: eq(block.id, blockId)
-});
+    // Verify ownership
+    const blockRecord = await db.query.block.findFirst({
+      where: eq(block.id, blockId)
+    });
 
-if (!blockRecord) {
-return fail(404, { success: false, message: 'Block not found' });
-}
+    if (!blockRecord) {
+      return fail(404, { success: false, message: 'Block not found' });
+    }
 
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, blockRecord.pageId)
-});
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, blockRecord.pageId)
+    });
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-await db
-.update(block)
-.set({ content })
-.where(eq(block.id, blockId));
+    // Parse and validate content for URLs
+    try {
+      const parsedContent = JSON.parse(content);
+      
+      // Validate URLs based on block type
+      const validation = blockContentSchema.safeParse(parsedContent);
+      if (!validation.success) {
+        return fail(400, { 
+          success: false, 
+          message: 'Invalid URL detected. Only http:// and https:// URLs are allowed.',
+          errors: validation.error.errors
+        });
+      }
+    } catch (e) {
+      return fail(400, { success: false, message: 'Invalid JSON content' });
+    }
 
-return { success: true };
-},
+    await db
+      .update(block)
+      .set({ content })
+      .where(eq(block.id, blockId));
 
-deleteBlock: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+    return { success: true };
+  },
 
-const formData = await request.formData();
-const blockId = formData.get('blockId') as string;
+  deleteBlock: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-if (!blockId) {
-return fail(400, { success: false, message: 'Missing blockId' });
-}
+    const formData = await request.formData();
+    const blockId = formData.get('blockId') as string;
 
-// Verify ownership
-const blockRecord = await db.query.block.findFirst({
-where: eq(block.id, blockId)
-});
+    if (!blockId) {
+      return fail(400, { success: false, message: 'Missing blockId' });
+    }
 
-if (!blockRecord) {
-return fail(404, { success: false, message: 'Block not found' });
-}
+    // Verify ownership
+    const blockRecord = await db.query.block.findFirst({
+      where: eq(block.id, blockId)
+    });
 
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, blockRecord.pageId)
-});
+    if (!blockRecord) {
+      return fail(404, { success: false, message: 'Block not found' });
+    }
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, blockRecord.pageId)
+    });
 
-await db.delete(block).where(eq(block.id, blockId));
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-return { success: true };
-},
+    await db.delete(block).where(eq(block.id, blockId));
 
-reorderBlocks: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+    return { success: true };
+  },
 
-const formData = await request.formData();
-const pageId = formData.get('pageId') as string;
-const blockOrder = formData.get('blockOrder') as string;
+  reorderBlocks: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-if (!pageId || !blockOrder) {
-return fail(400, { success: false, message: 'Missing required fields' });
-}
+    const formData = await request.formData();
+    const pageId = formData.get('pageId') as string;
+    const blockOrder = formData.get('blockOrder') as string;
 
-// Verify ownership
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, pageId)
-});
+    if (!pageId || !blockOrder) {
+      return fail(400, { success: false, message: 'Missing required fields' });
+    }
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    // Verify ownership
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, pageId)
+    });
 
-const order = JSON.parse(blockOrder) as string[];
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-// Update order for each block
-for (let i = 0; i < order.length; i++) {
-await db
-.update(block)
-.set({ order: i })
-.where(eq(block.id, order[i]));
-}
+    const order = JSON.parse(blockOrder) as string[];
 
-return { success: true };
-},
+    // Update order for each block
+    for (let i = 0; i < order.length; i++) {
+      await db
+        .update(block)
+        .set({ order: i })
+        .where(eq(block.id, order[i]));
+    }
 
-publishPage: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+    return { success: true };
+  },
 
-const formData = await request.formData();
-const pageId = formData.get('pageId') as string;
-const isPublished = formData.get('isPublished') as string;
+  publishPage: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-if (!pageId) {
-return fail(400, { success: false, message: 'Missing pageId' });
-}
+    const formData = await request.formData();
+    const pageId = formData.get('pageId') as string;
+    const isPublished = formData.get('isPublished') as string;
 
-// Verify ownership
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, pageId)
-});
+    if (!pageId) {
+      return fail(400, { success: false, message: 'Missing pageId' });
+    }
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    // Verify ownership
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, pageId)
+    });
 
-await db
-.update(page)
-.set({ isPublished: isPublished === 'true' ? true : false })
-.where(eq(page.id, pageId));
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-return { success: true, data: { published: isPublished === 'true' } };
-},
+    await db
+      .update(page)
+      .set({ isPublished: isPublished === 'true' ? true : false })
+      .where(eq(page.id, pageId));
 
-togglePublish: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+    return { success: true, data: { published: isPublished === 'true' } };
+  },
 
-const formData = await request.formData();
-const pageId = formData.get('pageId') as string;
-const published = formData.get('published') === 'true';
+  togglePublish: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-if (!pageId) {
-return fail(400, { success: false, message: 'Missing pageId' });
-}
+    const formData = await request.formData();
+    const pageId = formData.get('pageId') as string;
+    const published = formData.get('published') === 'true';
 
-// Verify ownership
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, pageId)
-});
+    if (!pageId) {
+      return fail(400, { success: false, message: 'Missing pageId' });
+    }
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    // Verify ownership
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, pageId)
+    });
 
-// Update publish status
-await db
-.update(page)
-.set({ isPublished: published })
-.where(eq(page.id, pageId));
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-return {
-success: true,
-data: { published }
-};
-},
+    // Update publish status
+    await db
+      .update(page)
+      .set({ isPublished: published })
+      .where(eq(page.id, pageId));
 
-updateTheme: async ({ request }) => {
-const session = await auth.api.getSession({ headers: request.headers });
-if (!session?.user?.id) {
-return fail(401, { success: false, message: 'Unauthorized' });
-}
+    return {
+      success: true,
+      data: { published }
+    };
+  },
 
-const formData = await request.formData();
-const pageId = formData.get('pageId') as string;
-const theme = formData.get('theme') as string;
+  updateTheme: async ({ request }) => {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return fail(401, { success: false, message: 'Unauthorized' });
+    }
 
-if (!pageId || !theme) {
-return fail(400, { success: false, message: 'Missing required fields' });
-}
+    const formData = await request.formData();
+    const pageId = formData.get('pageId') as string;
+    const theme = formData.get('theme') as string;
 
-// Verify ownership
-const pageRecord = await db.query.page.findFirst({
-where: eq(page.id, pageId)
-});
+    if (!pageId || !theme) {
+      return fail(400, { success: false, message: 'Missing required fields' });
+    }
 
-if (!pageRecord || pageRecord.userId !== session.user.id) {
-return fail(403, { success: false, message: 'Not authorized' });
-}
+    // Verify ownership
+    const pageRecord = await db.query.page.findFirst({
+      where: eq(page.id, pageId)
+    });
 
-// Validate theme
-const validThemes = ['luxury', 'neon'];
-if (!validThemes.includes(theme)) {
-return fail(400, { success: false, message: 'Invalid theme' });
-}
+    if (!pageRecord || pageRecord.userId !== session.user.id) {
+      return fail(403, { success: false, message: 'Not authorized' });
+    }
 
-await db
-.update(page)
-.set({ theme })
-.where(eq(page.id, pageId));
+    // Validate theme
+    const validThemes = ['luxury', 'neon'];
+    if (!validThemes.includes(theme)) {
+      return fail(400, { success: false, message: 'Invalid theme' });
+    }
 
-return { success: true, theme };
-}
+    await db
+      .update(page)
+      .set({ theme })
+      .where(eq(page.id, pageId));
+
+    return { success: true, theme };
+  }
 };
