@@ -227,3 +227,17 @@ Ce projet est sous licence MIT.
 ---
 
 **Développé avec ❤️ pour les créateurs**
+
+## 🎮 Compte de Démo
+
+Un compte de démo est disponible pour tester l'application (créé via le script seed) :
+
+| Email | Mot de passe | Rôle |
+|-------|--------------|------|
+| admin@segre.vip | **aeth3r** | Admin |
+| creator1@test.com | password123 | User |
+| creator2@test.com | password123 | User |
+| creator3@test.com | password123 | User |
+
+> **Note** : Ces comptes sont générés par le script `seed-postgres.ts`. Pour recréer les données de test, exécutez : `npx tsx seed-postgres.ts`
+
