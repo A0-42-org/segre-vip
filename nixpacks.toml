@@ -1,0 +1,20 @@
+[phases.build]
+cmds = ["bun run build"]
+
+[phases.install]
+cmds = ["bun install"]
+
+[start]
+cmd = "node build/index.js"
+
+[variables]
+PORT = "3000"
+
+[build.env]
+NODE_VERSION = "20"
+
+[[phases.build.dependsOn]]
+phases = ["install"]
+
+[static]
+publishPath = "build"
