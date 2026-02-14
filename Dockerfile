@@ -1,17 +1,17 @@
-FROM oven/bun:1-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files
 COPY package.json bun.lock ./
 
-# Install dependencies
-RUN bun install --frozen-lockfile
+# Install Bun and dependencies
+RUN npm install -g bun && bun install
 
-# Copy application code
+# Copy project files
 COPY . .
 
-# Build the application
+# Build SvelteKit application
 RUN bun run build
 
 # Production stage
@@ -19,17 +19,17 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy build output from builder
+# Copy built files
 COPY --from=builder /app/build ./
-COPY --from=builder /app/package.json ./
+
+# Copy package.json for production dependencies
+COPY package.json ./
 
 # Install production dependencies only
-RUN npm install -g bun && bun install --production --frozen-lockfile || npm install --production
+RUN npm install -g bun && bun install --production
 
-# Expose port
+# Expose port 3000 (default for adapter-node)
 EXPOSE 3000
 
 # Start the application
-ENV HOST=0.0.0.0
-ENV PORT=3000
 CMD ["node", "index.js"]

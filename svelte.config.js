@@ -4,9 +4,10 @@ import adapter from '@sveltejs/adapter-node';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 kit: {
+// Using adapter-node for Dokploy deployment
 adapter: adapter({
-// Default is 3000, same as SvelteKit dev
-port: 3000
+// Edge server is not needed for Dokploy
+edge: false
 })
 },
 preprocess: [mdsvex()],
