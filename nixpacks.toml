@@ -1,11 +1,11 @@
-[phases.build]
-cmds = ["bun run build"]
-
 [phases.install]
 cmds = ["bun install"]
 
+[phases.build]
+cmds = ["bun run build"]
+
 [start]
-cmd = "node build/index.js"
+cmd = "node dist/server/index.js"
 
 [variables]
 PORT = "3000"
@@ -17,4 +17,4 @@ NODE_VERSION = "20"
 phases = ["install"]
 
 [static]
-publishPath = "build"
+publishPath = "./dist"
